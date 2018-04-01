@@ -254,6 +254,7 @@ while(1 -eq 1) {
 				if ($CoinPools.pool -eq $lastpool) { $LastPay = $CoinPools.avgEarningCorrected }
 			}
 		}
+		$Pools = $Pools | Sort-Object avgEarningCorrected -Descending
 	}		
 	catch {
 		writelog ('CryptUnit NOT RESPONDING...') $logfile $true
@@ -299,6 +300,7 @@ while(1 -eq 1) {
 					$Result = Invoke-WebRequest ($Url + "?pool=$NewPool") -UseBasicParsing -TimeoutSec 10
 				}
 				$LastPool = $NewPool
+				$LastPay = $NewPay
 				$LoopStarttime=Get-Date
 			} catch {
 				writelog ('XMR-STAK NOT RESPONDING...') $logfile $false
@@ -324,6 +326,8 @@ while(1 -eq 1) {
 	Print_Horizontal_line
 	"  (E)nd Interval   (Q)uit" | Out-host
 	Print_Horizontal_line
+	"Active Pool:  $LastPool " + $lastpay.tostring("n2") + '$' | Out-host
+	Print_Horizontal_line  "Pools"  
 
 	$Pools | Format-Table (
             @{Label = "Coin"; Expression = {$_.Coin}},   
